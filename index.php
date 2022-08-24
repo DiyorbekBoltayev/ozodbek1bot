@@ -10,6 +10,9 @@ $text = $telegram->Text(); // foydalanuvchi yuborgan text
 $data = $telegram->getData();
 $message = $data['message'];
 
+$e_message = "";
+try {
+
 
 $step = "";
 $name = $message['from']['first_name'];
@@ -70,6 +73,19 @@ elseif ($text=='❌ Buyurtmani bekor qilish'){
     $telegram->sendMessage($content);
 }
 
+} catch (\Exception $e) {
+    $e_message .= $e->getMessage();
+    $e_message .= $e->getLine();
+    $e_message .= $e->getFile();
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $e_message]);
+
+} catch (Throwable $e) {
+    $e_message .= $e->getMessage();
+    $e_message .= $e->getLine();
+    $e_message .= $e->getFile();
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $e_message]);
+
+}
 
 //Funksiyalar
 
@@ -128,9 +144,6 @@ function showOrder()
             $telegram->buildKeyboardButton("3kg = 75 000 sum"), $telegram->buildKeyboardButton("4kg = 100 000 sum")
         ],
 
-        [
-            $telegram->buildKeyboardButton("Asosiy")
-        ]
     ];
 
     $keyb = $telegram->buildKeyBoard($option, $onetime = false, $resize = true);
