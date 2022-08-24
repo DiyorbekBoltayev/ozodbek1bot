@@ -101,7 +101,7 @@ function showStart()
     $content = [
         'chat_id' => $chat_id,
         'reply_markup' => $keyb,
-        'text' => " Assalomu Alaykum biz sof va tabiy asal bilan shug'ullanamiz  ",
+        'text' => " Assalomu Alaykum biz sof va tabiy asal bilan shug'ullanamiz va siz bemalol bizdan uyingizda turib asal harid qilishingiz mumkin 💯✅ ",
     ];
 
     $telegram->sendMessage($content);
