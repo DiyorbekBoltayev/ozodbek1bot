@@ -86,7 +86,7 @@ elseif ($text=='❌ Buyurtmani bekor qilish'){
     $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $e_message]);
 
 }
-
+echo 'salom';
 //Funksiyalar
 
 function showStart()
