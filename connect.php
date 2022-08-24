@@ -12,3 +12,27 @@ mysqli_set_charset($conn,'utf8');
 //while ($row=$result->fetch_assoc()){
 //    var_dump($row);
 //}
+
+
+
+
+
+//// Xatolikni tekshirish uchun
+
+$e_message = "";
+try {
+
+
+} catch (\Exception $e) {
+    $e_message .= $e->getMessage();
+    $e_message .= $e->getLine();
+    $e_message .= $e->getFile();
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $e_message]);
+
+} catch (Throwable $e) {
+    $e_message .= $e->getMessage();
+    $e_message .= $e->getLine();
+    $e_message .= $e->getFile();
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $e_message]);
+
+}
