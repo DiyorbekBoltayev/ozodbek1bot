@@ -11,7 +11,7 @@ $data = $telegram->getData();
 $message = $data['message'];
 $first_name = $message['from']['first_name'];
 $last_name = $message['from']['last_name'];
-
+$admin_id = 1366931310;
 
 $step = "";
 $name = $message['from']['first_name'];
@@ -31,7 +31,9 @@ $massa = ["1kg = 💸 60 000 sum", "2kg = 💸 115 000 sum", "3kg = 💸 170 000
 
 if ($text == "/start" || $text == "⏮ Menu") {
     showStart();
-} elseif ($text == "🍯 Biz haqimizda") {
+} elseif ($text == "⏮ Menu" && $step = "tugadi") {
+    sendAdmin();
+}elseif ($text == "🍯 Biz haqimizda") {
     showAbout();
 } elseif ($text == "🚛 Buyurtma berish") {
     showOrder();
@@ -264,4 +266,58 @@ function buyurtmaBekorQilindi()
 
     ];
     $telegram->sendMessage($content);
+}
+
+function getName($chat_id){
+    $sql = "select name from users where chat_id='$chat_id'";
+    $result = mysqli_query($conn, $sql);
+    $row = $result->fetch_assoc();
+    return $row['name'];
+}
+function getMassa($chat_id){
+    $sql = "select massa from users where chat_id='$chat_id'";
+    $result = mysqli_query($conn, $sql);
+    $row = $result->fetch_assoc();
+    return $row['massa']+1;
+}
+
+function getNumber($chat_id){
+    $sql = "select phone from users where chat_id='$chat_id'";
+    $result = mysqli_query($conn, $sql);
+    $row = $result->fetch_assoc();
+    return $row['phone'];
+}
+function getLocation($chat_id){
+    $sql = "select latitude,longitude,address from users where chat_id='$chat_id'";
+    $result = mysqli_query($conn, $sql);
+    $row = $result->fetch_assoc();
+    if ($row['address'!=null]){
+    return $row['address'];
+    }
+    else{
+        return $row['latitude']." ".$row['longitude'];
+    }
+}
+
+function sendAdmin(){
+    global $first_name, $last_name, $admin_id, $telegram, $chat_id;
+    $text = "Yangi buyurtma keldi!";
+    $text.='\n';
+    $text.="Ismi: ".getName($chat_id);
+    $text.='\n';
+    $text.="Hajm: ".getMassa($chat_id)."-kg";
+    $text.='\n';
+    $text.="Telefon nomer: ".getNumber($chat_id);
+    $text.='\n';
+    $text.="Manzil: ".getLocation($chat_id);
+    $text.='\n';
+
+    $content = [
+        'chat_id' => $admin_id,
+        'text' => $text,
+
+    ];
+    $telegram->sendMessage($content);
+
+
 }
