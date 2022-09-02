@@ -9,6 +9,8 @@ $chat_name = $telegram->FirstName();  // foydalanuvchi nomi
 $text = $telegram->Text(); // foydalanuvchi yuborgan text
 $data = $telegram->getData();
 $message = $data['message'];
+$first_name = $message['from']['first_name'];
+$last_name = $message['from']['last_name'];
 
 
 $step = "";
@@ -25,7 +27,7 @@ if ($result->num_rows != 0) {
 }
 
 
-$massa = ["1kg = 💸 25 000 sum", "2kg = 💸 50 000 sum", "3kg = 💸 75 000 sum", "4kg = 💸 100 000 sum"];
+$massa = ["1kg = 💸 60 000 sum", "2kg = 💸 115 000 sum", "3kg = 💸 170 000 sum", "4kg = 💸 225 000 sum"];
 
 if ($text == "/start" || $text == "⏮ Menu") {
     showStart();
@@ -50,7 +52,8 @@ if ($text == "/start" || $text == "⏮ Menu") {
         }
         $sql = "update users set latitude='',longitude='', address='$satr',step='tugadi' where chat_id='$chat_id'";
         mysqli_query($conn, $sql);
-    } else {
+    }
+    else {
         $latitude = $message['location']['latitude'];
         $longitude = $message['location']['longitude'];
         $sql = "update users set address='',latitude='$latitude',longitude='$longitude',step='tugadi' where chat_id='$chat_id'";
@@ -58,12 +61,14 @@ if ($text == "/start" || $text == "⏮ Menu") {
     }
     buyurtmaQabulQilindi();
 
-} elseif ($text == '❌ Buyurtmani bekor qilish') {
+}
+elseif ($text == '❌ Buyurtmani bekor qilish') {
     $sql = "update users set otmen=1,step='start' where chat_id='$chat_id'";
     mysqli_query($conn, $sql);
     buyurtmaBekorQilindi();
 
-} else {
+}
+else {
     $content = [
         'chat_id' => $chat_id,
         'text' => "⚠️ Bunday buyruq mavjud emas ! \nIltimos quyidagi tugmalardan birini tanlang 👇"
@@ -78,7 +83,7 @@ if ($text == "/start" || $text == "⏮ Menu") {
 
 function showStart()
 {
-    global $telegram, $chat_id, $conn, $name, $date;
+    global $telegram, $chat_id, $conn, $name, $date,$first_name,$last_name;
 
     $sql = "SELECT * from users WHERE chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
@@ -101,7 +106,7 @@ function showStart()
     $content = [
         'chat_id' => $chat_id,
         'reply_markup' => $keyb,
-        'text' => " Assalomu Alaykum biz sof va tabiy asal bilan shug'ullanamiz va siz bemalol bizdan uyingizda turib asal harid qilishingiz mumkin 💯✅ ",
+        'text' => " Assalomu Alaykum {$first_name}  {$last_name}  biz sof va tabiy asal bilan shug'ullanamiz va siz bemalol bizdan uyingizda turib asal harid qilishingiz mumkin 💯✅ ",
     ];
 
     $telegram->sendMessage($content);
@@ -124,11 +129,11 @@ function showOrder()
     global $telegram, $chat_id;
     $option = [
         [
-            $telegram->buildKeyboardButton("1kg = 💸 25 000 sum"), $telegram->buildKeyboardButton("2kg = 💸 50 000 sum")
+            $telegram->buildKeyboardButton("1kg = 💸 60 000 sum"), $telegram->buildKeyboardButton("2kg = 💸 115 000 sum")
         ],
 
         [
-            $telegram->buildKeyboardButton("3kg = 💸 75 000 sum"), $telegram->buildKeyboardButton("4kg = 💸 100 000 sum")
+            $telegram->buildKeyboardButton("3kg = 💸 170 000 sum"), $telegram->buildKeyboardButton("4kg = 💸 225 000 sum")
         ],
         [$telegram->buildKeyboardButton('⏮ Menu')]
 
@@ -199,7 +204,7 @@ function joylashuvYuborish()
     $content = [
         'chat_id' => $chat_id,
         'reply_markup' => $keyboard,
-        'text' => "  🗺 Urganch tumani bo'ylab yetkazib berish bepul !\n🚛 Yetkazib berish uchun manzilni kiriting yoki joylashuvni yuboring. Istasangiz o'zingiz kelib olib ketishingiz ham mumkin. \n 🏢 Bizning manzil: Urganch tumani Kattabog' mahallasi Ummon ko'chasi 28-uy"
+        'text' => "  🗺 Urganch shahari bo'ylab yetkazib berish bepul !\n🚛 Yetkazib berish uchun manzilni kiriting yoki joylashuvni yuboring. Istasangiz o'zingiz kelib olib ketishingiz ham mumkin. \n 🏢 Bizning manzil: Urganch shahar Darital ro`parasi "
     ];
 
     $telegram->sendMessage($content);
