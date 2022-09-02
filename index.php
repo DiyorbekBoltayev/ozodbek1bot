@@ -227,8 +227,7 @@ function telefonXato()
     $telegram->sendMessage($content);
 }
 
-function buyurtmaQabulQilindi()
-{
+function buyurtmaQabulQilindi(){
     global $telegram, $chat_id;
 
     $option = [
@@ -242,12 +241,10 @@ function buyurtmaQabulQilindi()
         'text' => "  ✅ Buyurtma qabul qilindi.\n☎️ Siz bilan tez orada bog'lanamiz."
     ];
     $telegram->sendMessage($content);
-    sendAdmin();
 
 }
 
-function buyurtmaBekorQilindi()
-{
+function buyurtmaBekorQilindi(){
     global $telegram, $chat_id;
     $option = [
         [$telegram->buildKeyboardButton('📜 Biz haqimizda')],
@@ -261,18 +258,16 @@ function buyurtmaBekorQilindi()
 
     ];
     $telegram->sendMessage($content);
-    sendAtmen();
 
 }
 
-function getName($chat_id)
-{
+
+function getName($chat_id){
     $sql = "select name from users where chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
     $row = $result->fetch_assoc();
     return $row['name'];
 }
-
 function getMassa($chat_id)
 {
     $sql = "select massa from users where chat_id='$chat_id'";
@@ -280,15 +275,12 @@ function getMassa($chat_id)
     $row = $result->fetch_assoc();
     return $row['massa'] + 1;
 }
-
-function getNumber($chat_id)
-{
+function getNumber($chat_id){
     $sql = "select phone from users where chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
     $row = $result->fetch_assoc();
     return $row['phone'];
 }
-
 function getLocation($chat_id)
 {
     $sql = "select latitude,longitude,address from users where chat_id='$chat_id'";
@@ -301,8 +293,7 @@ function getLocation($chat_id)
     }
 }
 
-function sendAdmin()
-{
+function sendAdmin(){
     global $admin_id, $telegram, $chat_id;
     $text = "Yangi buyurtma keldi!";
     $text .= '\n';
@@ -323,8 +314,6 @@ function sendAdmin()
 
 
 }
-
-;
 
 function sendAtmen()
 {
