@@ -31,9 +31,7 @@ $massa = ["1kg = 💸 60 000 sum", "2kg = 💸 115 000 sum", "3kg = 💸 170 000
 
 if ($text == "/start" || $text == "⏮ Menu") {
     showStart();
-} elseif ($text == "⏮ Menu" && $step = "tugadi") {
-    sendAdmin();
-}elseif ($text == "🍯 Biz haqimizda") {
+} elseif ($text == "🍯 Biz haqimizda") {
     showAbout();
 } elseif ($text == "🚛 Buyurtma berish") {
     showOrder();
@@ -54,8 +52,7 @@ if ($text == "/start" || $text == "⏮ Menu") {
         }
         $sql = "update users set latitude='',longitude='', address='$satr',step='tugadi' where chat_id='$chat_id'";
         mysqli_query($conn, $sql);
-    }
-    else {
+    } else {
         $latitude = $message['location']['latitude'];
         $longitude = $message['location']['longitude'];
         $sql = "update users set address='',latitude='$latitude',longitude='$longitude',step='tugadi' where chat_id='$chat_id'";
@@ -63,14 +60,12 @@ if ($text == "/start" || $text == "⏮ Menu") {
     }
     buyurtmaQabulQilindi();
 
-}
-elseif ($text == '❌ Buyurtmani bekor qilish') {
+} elseif ($text == '❌ Buyurtmani bekor qilish') {
     $sql = "update users set otmen=1,step='start' where chat_id='$chat_id'";
     mysqli_query($conn, $sql);
     buyurtmaBekorQilindi();
 
-}
-else {
+} else {
     $content = [
         'chat_id' => $chat_id,
         'text' => "⚠️ Bunday buyruq mavjud emas ! \nIltimos quyidagi tugmalardan birini tanlang 👇"
@@ -85,7 +80,7 @@ else {
 
 function showStart()
 {
-    global $telegram, $chat_id, $conn, $name, $date,$first_name,$last_name;
+    global $telegram, $chat_id, $conn, $name, $date, $first_name, $last_name;
 
     $sql = "SELECT * from users WHERE chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
@@ -246,8 +241,8 @@ function buyurtmaQabulQilindi()
         'reply_markup' => $keyboard,
         'text' => "  ✅ Buyurtma qabul qilindi.\n☎️ Siz bilan tez orada bog'lanamiz."
     ];
-
     $telegram->sendMessage($content);
+    sendAdmin();
 
 }
 
@@ -266,58 +261,84 @@ function buyurtmaBekorQilindi()
 
     ];
     $telegram->sendMessage($content);
+    sendAtmen();
+
 }
 
-function getName($chat_id){
+function getName($chat_id)
+{
     $sql = "select name from users where chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
     $row = $result->fetch_assoc();
     return $row['name'];
 }
-function getMassa($chat_id){
+
+function getMassa($chat_id)
+{
     $sql = "select massa from users where chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
     $row = $result->fetch_assoc();
-    return $row['massa']+1;
+    return $row['massa'] + 1;
 }
 
-function getNumber($chat_id){
+function getNumber($chat_id)
+{
     $sql = "select phone from users where chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
     $row = $result->fetch_assoc();
     return $row['phone'];
 }
-function getLocation($chat_id){
+
+function getLocation($chat_id)
+{
     $sql = "select latitude,longitude,address from users where chat_id='$chat_id'";
     $result = mysqli_query($conn, $sql);
     $row = $result->fetch_assoc();
-    if ($row['address'!=null]){
-    return $row['address'];
-    }
-    else{
-        return $row['latitude']." ".$row['longitude'];
+    if ($row['address' != null]) {
+        return $row['address'];
+    } else {
+        return $row['latitude'] . " " . $row['longitude'];
     }
 }
 
-function sendAdmin(){
-    global $first_name, $last_name, $admin_id, $telegram, $chat_id;
+function sendAdmin()
+{
+    global $admin_id, $telegram, $chat_id;
     $text = "Yangi buyurtma keldi!";
-    $text.='\n';
-    $text.="Ismi: ".getName($chat_id);
-    $text.='\n';
-    $text.="Hajm: ".getMassa($chat_id)."-kg";
-    $text.='\n';
-    $text.="Telefon nomer: ".getNumber($chat_id);
-    $text.='\n';
-    $text.="Manzil: ".getLocation($chat_id);
-    $text.='\n';
+    $text .= '\n';
+    $text .= "Ismi: " . getName($chat_id);
+    $text .= '\n';
+    $text .= "Hajm: " . getMassa($chat_id) . "-kg";
+    $text .= '\n';
+    $text .= "Telefon nomer: " . getNumber($chat_id);
+    $text .= '\n';
+    $text .= "Manzil: " . getLocation($chat_id);
+    $text .= '\n';
 
     $content = [
         'chat_id' => $admin_id,
         'text' => $text,
-
     ];
     $telegram->sendMessage($content);
 
 
+}
+
+;
+
+function sendAtmen()
+{
+    global $admin_id, $telegram, $chat_id;
+
+    $text = "Yangi buyurtma keldi!";
+    $text .= '\n';
+    $text .= "Ismi: " . getName($chat_id);
+    $text .= '\n';
+    $text .= "Atmen";
+
+    $content = [
+        'chat_id' => $admin_id,
+        'text' => $text,
+    ];
+    $telegram->sendMessage($content);
 }
