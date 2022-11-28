@@ -1,8 +1,17 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
+
 require_once "connect.php";
 include 'Telegram.php';
 
 $telegram = new Telegram('5556639565:AAGvOzJy27T4TEizvw958xdidtiyv_xkXRY');
+
+
+$e_message = "! Xatolik \n";
+try {
 
 $chat_id = $telegram->ChatID();  // foydalanuvchi ID si
 $chat_name = $telegram->FirstName();  // foydalanuvchi nomi
@@ -77,7 +86,31 @@ if ($text == "/start" || $text == "⏮ Menu") {
 }
 
 
+
+
+} catch (Throwable $e) {
+    $e_message .= $e->getMessage() . "\n Qator-";
+    $e_message .= $e->getLine() . "\n File-";
+    $e_message .= $e->getFile();
+    sendMessage($e_message);
+}
+
+
+
+
 //Funksiyalar
+function sendMessage($text)
+{
+    global $chat_id, $telegram;
+    $content = [
+        'chat_id' => $chat_id,
+        'text' => $text
+    ];
+    $telegram->sendMessage($content);
+}
+
+
+
 
 function showStart()
 {
