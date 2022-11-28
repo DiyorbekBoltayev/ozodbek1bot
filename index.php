@@ -39,7 +39,8 @@ if ($text == "/start" || $text == "⏮ Menu") {
     askContact();
 } elseif ($step == "phone") {
     telefonYuborildi();
-} elseif ($step == 'location' || $text == "🚘 O'zim boraman") {
+} elseif ($step == 'location' || $text == "🚘 O'zim boraman")
+{
     if ($text == "🚘 O'zim boraman") {
         $text = "Bizdan kelib oladi";
     }
